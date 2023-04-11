@@ -40,7 +40,6 @@ p {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
-  height: calc(100vh - 30px - 325px);
 }
 
 .header {
