@@ -29,11 +29,13 @@
             </h2>
           </div>
         </div>
-        <div class="board">
+        <div class="board" id="board">
           <!-- board content injected here -->
-          <ul class="category">
+          <!-- <ul class="category">
             <li class="category-heading">Category-1</li>
-            <li class="category-item"><button>$100</button></li>
+            <li class="category-item" onclick="openModal()">
+              <button>$100</button>
+            </li>
             <li class="category-item"><button>$200</button></li>
             <li class="category-item"><button>$300</button></li>
             <li class="category-item"><button>$400</button></li>
@@ -70,16 +72,32 @@
             <li class="category-item"><button>$300</button></li>
             <li class="category-item"><button>$400</button></li>
             <li class="category-item"><button>$500</button></li>
-          </ul>
+          </ul> -->
         </div>
-        <!-- <div class="question-modal">
-          <form>
-            <h2 class="question-title">Question</h2>
-            <p>Give answer</p>
-            <input type="text" name="answer" id="answer" class="answer-box" />
-            <button type="submit"></button>
+        <!-- model code here -->
+        <div class="question-modal" id="questionModal">
+          <div class="close-button">&times;</div>
+          <form class="content" autocomplete="off">
+            <h2 id="question">
+              In 2018 this NHL team was on a roll, making it to the Stanley Cup
+              finals in its very first season
+            </h2>
+            <input
+              type="text"
+              name="answer"
+              id="answer"
+              class="answer-box"
+              placeholder="Writer your answer here"
+            />
+            <button type="submit">Submit</button>
           </form>
-        </div> -->
+          <div class="result-area">
+            <h3 class="incorrect-result hidden">Incorrect!</h3>
+            <h3 class="correct-result">Correct!</h3>
+          </div>
+          <div class="correct-answer">The correct answer is Lucis Fenws</div>
+        </div>
+        <div class="overlay hidden" id="overlay"></div>
       </main>
     </div>
     <footer class="footer">
