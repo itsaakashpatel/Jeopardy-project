@@ -4,6 +4,9 @@ class Jeopardy {
     this.allCategories = [];
     this.data = [];
     this.boardValues = [100, 200, 300, 400, 500];
+    this.modalVisibility = false;
+    this.score = 0;
+    this.currentObject = null;
 
     //get categories having 20 clues minimum -> https://jservice.io/api/categories?count=50 and sort them by highest clues to find max probability of 20 clues
     //store questions per value  and category wise by checking if 500, 400, 300 ,200 and 100 are there to make sure that only 5 clues are there
@@ -13,8 +16,8 @@ class Jeopardy {
       this.data = JSON.parse(localStorage.getItem("jeopardyData"));
 
       setTimeout(() => {
-        this.buildBoard();
-      }, 3000);
+        this.loadingBoard();
+      }, 100);
     } else {
       this.getCategories();
     }
@@ -34,9 +37,9 @@ class Jeopardy {
       .sort((a, b) => b.clues_count - a.clues_count)
       .filter((item) => item.clues_count >= 20);
 
-    this.allCategories = filterCategories.slice(0, 5);
-    this.getQuestions(filterCategories.slice(0, 5));
-    console.log("THis is the filterCategories", filterCategories.slice(0, 5));
+    this.allCategories = filterCategories.slice(0, 10);
+    this.getQuestions(filterCategories.slice(0, 10));
+    console.log("THis is the filterCategories", filterCategories.slice(0, 10));
   }
 
   async getQuestions() {
@@ -50,11 +53,14 @@ class Jeopardy {
     const allCategories = await Promise.allSettled(promiseArray);
     this.data = allCategories
       .filter((item) => item.status === "fulfilled" && item.value.valid)
-      .map((validCategory) => validCategory.value.data);
+      .map((validCategory) => validCategory.value.data)
+      .slice(0, 5);
 
     //TODO
     localStorage.setItem("jeopardyData", JSON.stringify(this.data));
-    this.buildBoard();
+    setTimeout(() => {
+      this.loadingBoard();
+    }, 100);
     console.log("THIS QUESTIONS", this.data);
   }
 
@@ -78,6 +84,7 @@ class Jeopardy {
         valid: true,
         data: {
           title: categoryTitle,
+          id: categoryId,
           questions: getQuestionsByCategoryData,
         },
       };
@@ -89,11 +96,28 @@ class Jeopardy {
     }
   }
 
+  loadingBoard() {
+    const getLoadingElement = document.querySelector(".loading");
+    if (getLoadingElement) {
+      getLoadingElement.style.opacity = 1;
+
+      //after 1000ms delay then show the board
+      setTimeout(() => {
+        this.buildBoard();
+      }, 1000);
+    }
+  }
+
   buildBoard() {
     const getBoard = document.querySelector("#board");
-    console.log("GETTING DATA FROM LOCAL", this.data);
+    console.log("BUILD BOARD DATA", this.data, getBoard);
     if (getBoard) {
-      console.log("COMING HERE", getBoard);
+      //remove loading element
+      const getLoadingElement = document.querySelector(".loading");
+      if (getLoadingElement) {
+        getLoadingElement.style.opacity = 0.3;
+        getLoadingElement.classList.add("hidden");
+      }
       //creating a board of 5 categories
       for (let index = 0; index < this.data.length; index++) {
         const ul = document.createElement("ul");
@@ -109,7 +133,7 @@ class Jeopardy {
           const button = document.createElement("button");
           button.innerHTML = `$${this.boardValues[index]}`;
           button.addEventListener("click", () => {
-            this.openModal();
+            this.openModal(this.data[index].id, this.boardValues[index]);
           });
           liItem.appendChild(button);
           ul.appendChild(liItem);
@@ -123,9 +147,120 @@ class Jeopardy {
     }
   }
 
-  openModal() {
+  toggleModal() {
     const modal = document.getElementById("questionModal");
-    modal.style.opacity = 1;
+    const overlayELement = document.querySelector(".overlay");
+    if (this.modalVisibility) {
+      modal.classList.remove("hidden");
+      modal.classList.add("show");
+      overlayELement.classList.remove("hidden");
+      overlayELement.classList.add("show");
+      overlayELement.addEventListener("click", () => {
+        this.closeModal();
+      });
+
+      //I want to prevent scrolling of the page when modal is open
+      document.body.classList.add("modal-open");
+    } else {
+      overlayELement.removeEventListener("click", () => {});
+      modal.classList.remove("show");
+      modal.classList.add("hidden");
+      overlayELement.classList.remove("show");
+      overlayELement.classList.add("hidden");
+
+      document.body.classList.remove("modal-open");
+    }
+  }
+
+  openModal(categoryId, value) {
+    console.log("CATEGORY ID", { categoryId, value });
+    const modal = document.getElementById("questionModal");
+    this.modalVisibility = true;
+    this.toggleModal();
+
+    //add eventlistener to close button
+    const closeButton = document.querySelector("#questionModal .close-button");
+    if (closeButton) {
+      closeButton.addEventListener("click", () => {
+        this.closeModal();
+      });
+    }
+
+    //find the question having value
+    // const getObj = this.data
+    //   .filter((category) => category.id === categoryId)
+    //   .find((item) => item.questions.value === value);
+
+    const getObj = this.data.reduce((prev, curr) => {
+      if (curr.id === categoryId) {
+        return curr.questions.find((item) => item.value === value);
+      }
+      return prev;
+    }, {});
+
+    console.log(
+      "🚀 ~ file: aakash_ashika.js:196 ~ Jeopardy ~ openModal ~ getObj:",
+      getObj
+    );
+    if (getObj) {
+      this.currentObject = getObj;
+    }
+
+    if (this.currentObject) {
+      this.currentQuestion = this.data.indexOf(this.currentObject);
+      //adding question
+      const question = modal.querySelector("#question");
+      console.log(
+        "🚀 ~ file: aakash_ashika.js:203 ~ Jeopardy ~ openModal ~ question:",
+        question
+      );
+      question.innerHTML = this.currentObject.question;
+
+      //add eventlistener to submit button
+
+      const formElement = modal.querySelector("form");
+      formElement.addEventListener("submit", (e) => {
+        e.preventDefault();
+        this.checkAnswer(modal);
+      });
+      //submit the data and show user the result
+      //if answer is correct then increase the score
+    }
+  }
+
+  checkAnswer(modal) {
+    const getUserAnswer = modal.querySelector("#user-answer");
+
+    //validation
+    if (!getUserAnswer || getUserAnswer.value === "") {
+      return;
+    }
+
+    if ((this.currentObject.value = getUserAnswer.value)) {
+      //show the correct message
+      modal.querySelector(".correct-result").classList.add("show");
+
+      //close the modal after 1 second
+      setTimeout(() => {
+        this.closeModal();
+      }, 1000);
+    } else {
+      //show the incorrect message and correct answer
+      modal.querySelector(".incorrect-result").classList.add("show");
+      const correctAnswerElement = modal.querySelector(".correct-answer");
+
+      correctAnswerElement.innerHTML = this.currentObject.answer;
+
+      //close the modal after 1 second
+      setTimeout(() => {
+        this.closeModal();
+      }, 1000);
+    }
+  }
+
+  closeModal() {
+    this.modalVisibility = false;
+    this.toggleModal();
   }
 }
 

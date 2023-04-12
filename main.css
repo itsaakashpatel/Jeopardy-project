@@ -9,7 +9,7 @@ body {
   font-size: 16px;
   padding: 0;
   margin: 0;
-  height: 100vh;
+  min-height: 100%;
   max-width: 100%;
   overflow-x: hidden;
   position: relative;
@@ -93,11 +93,23 @@ p {
   margin: 0;
 }
 
-.board {
+#board {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 50px;
+  color: aliceblue;
+  font-weight: bold;
+  opacity: 0.3;
+  transition: opacity 0.3s ease-in-out;
+  margin-top: 50px;
 }
 
 ul {
@@ -136,8 +148,13 @@ ul {
   background: linear-gradient(180deg, #0120cb 0%, #011ba9 100%);
 }
 
+.category-item button:hover {
+  background-color: #233abc;
+  cursor: pointer;
+}
+
 #questionModal {
-  display: flex;
+  display: none;
   opacity: 0;
   transition: opacity 0.3s ease-in-out;
   flex-direction: column;
@@ -148,6 +165,7 @@ ul {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
+  width: 50%;
   background: linear-gradient(180deg, #2e2e3a 0%, #0c0c2c 100%);
   border-radius: 10px;
   z-index: 2;
@@ -166,8 +184,19 @@ ul {
   align-self: flex-end;
 }
 
+.close-button:hover {
+  background-color: #d3bf09;
+  cursor: pointer;
+}
+
 .hidden {
-  display: none;
+  display: none !important;
+  opacity: 0 !important;
+}
+
+.show {
+  display: flex !important;
+  opacity: 1 !important;
 }
 
 #questionModal .content {
@@ -243,6 +272,11 @@ ul {
   font-weight: bold;
   font-style: italic;
   text-align: center;
+}
+
+.modal-open {
+  overflow: hidden;
+  position: fixed;
 }
 
 #overlay {
