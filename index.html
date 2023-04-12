@@ -15,10 +15,93 @@
     <script src="./js/aakash_ashika.js"></script>
   </head>
   <body>
+    <header class="header">
+      <img src="./assets/jeopardy_logo.svg" alt="Jeopardy Game" />
+    </header>
     <div class="container">
-      <div class="header">
-        <img src="./assets/jeopardy_logo.svg" alt="Jeopardy Game" />
-      </div>
+      <main class="content">
+        <div class="cta">
+          <button type="reset" class="reset-button">Reset</button>
+          <div class="score">
+            <h2 class="score-title">
+              Your Score :
+              <h3 class="your-score">0</h3>
+            </h2>
+          </div>
+        </div>
+        <div class="board" id="board">
+          <!-- board content injected here -->
+          <!-- <ul class="category">
+            <li class="category-heading">Category-1</li>
+            <li class="category-item" onclick="openModal()">
+              <button>$100</button>
+            </li>
+            <li class="category-item"><button>$200</button></li>
+            <li class="category-item"><button>$300</button></li>
+            <li class="category-item"><button>$400</button></li>
+            <li class="category-item"><button>$500</button></li>
+          </ul>
+          <ul class="category">
+            <li class="category-heading">Category-2</li>
+            <li class="category-item"><button>$100</button></li>
+            <li class="category-item"><button>$200</button></li>
+            <li class="category-item"><button>$300</button></li>
+            <li class="category-item"><button>$400</button></li>
+            <li class="category-item"><button>$500</button></li>
+          </ul>
+          <ul class="category">
+            <li class="category-heading">Category-3</li>
+            <li class="category-item"><button>$100</button></li>
+            <li class="category-item"><button>$200</button></li>
+            <li class="category-item"><button>$300</button></li>
+            <li class="category-item"><button>$400</button></li>
+            <li class="category-item"><button>$500</button></li>
+          </ul>
+          <ul class="category">
+            <li class="category-heading">Category-4</li>
+            <li class="category-item"><button>$100</button></li>
+            <li class="category-item"><button>$200</button></li>
+            <li class="category-item"><button>$300</button></li>
+            <li class="category-item"><button>$400</button></li>
+            <li class="category-item"><button>$500</button></li>
+          </ul>
+          <ul class="category">
+            <li class="category-heading">Category-5</li>
+            <li class="category-item"><button>$100</button></li>
+            <li class="category-item"><button>$200</button></li>
+            <li class="category-item"><button>$300</button></li>
+            <li class="category-item"><button>$400</button></li>
+            <li class="category-item"><button>$500</button></li>
+          </ul> -->
+        </div>
+        <!-- model code here -->
+        <div class="question-modal" id="questionModal">
+          <div class="close-button">&times;</div>
+          <form class="content" autocomplete="off">
+            <h2 id="question">
+              In 2018 this NHL team was on a roll, making it to the Stanley Cup
+              finals in its very first season
+            </h2>
+            <input
+              type="text"
+              name="answer"
+              id="answer"
+              class="answer-box"
+              placeholder="Writer your answer here"
+            />
+            <button type="submit">Submit</button>
+          </form>
+          <div class="result-area">
+            <h3 class="incorrect-result hidden">Incorrect!</h3>
+            <h3 class="correct-result">Correct!</h3>
+          </div>
+          <div class="correct-answer">The correct answer is Lucis Fenws</div>
+        </div>
+        <div class="overlay hidden" id="overlay"></div>
+      </main>
     </div>
+    <footer class="footer">
+      <p>Created and developed by: Aakash Patel & Ashika Trambadiya</p>
+    </footer>
   </body>
 </html>
