@@ -1,3 +1,16 @@
+/**
+ * Jeopardy
+ * @author Aakash Patel and Ashika Trambadiya
+ * @version 1.0
+ * @since 1.0
+ * @description Jeopardy is a game where you have to guess the correct answer of a question.
+ * @copyright Copyright (c) 2023
+ * @license MIT
+ * @see https://github.com/itsaakashpatel/Jeopardy-project
+ * @live https://jeopardy-project.vercel.app/
+ *
+ */
+
 class Jeopardy {
   constructor() {
     this.BASE_URL = "https://jservice.io/api/";
@@ -12,7 +25,7 @@ class Jeopardy {
     //get categories having 20 clues minimum -> https://jservice.io/api/categories?count=50 and sort them by highest clues to find max probability of 20 clues
     //store questions per value  and category wise by checking if 500, 400, 300 ,200 and 100 are there to make sure that only 5 clues are there
 
-    //TODO:
+    //MAKING API CALL FOR THE FIRST TIME THEN STORE TO LOCAL STORAGE TO AVOID FREQUENT API CALLS
     if (localStorage.getItem("jeopardyData")) {
       this.data = JSON.parse(localStorage.getItem("jeopardyData"));
 
